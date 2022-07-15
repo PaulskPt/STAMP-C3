@@ -23,8 +23,8 @@
 /*
    Modifications by Paulus Schulinck (Github @PaulskPt)
    to reduce the brilliance of the LED 
-   so that the LED light does not harm your eyes
-   Date modifications: 2022-07-15.
+   so that the LED light does not harm your eyes.
+   Also added the mod described in issue #2
 */
 #define STAMP_C3
 // #define STAMP_C3U
@@ -108,8 +108,8 @@ void app_main(void)
     gpio_set_pull_mode(BTN_PIN, GPIO_PULLUP_ONLY);
 
     //update_led(0, 255, 200);
-    ESP_LOGI("Main", "Initial LED brilliance set to: r(%d), g(%d) and b(%d)", brill_red, brill_green, brill_blue);  // line added by @PaulskPt
-    update_led(brill_red, brill_green, brill_blue);  // Line added by @PaulskPt. I want much less brilliance of the LED
+    ESP_LOGI("Main", "Initial LED brilliance set to: r(%d), g(%d) and b(%d)", brill_red, brill_green, brill_blue);
+    update_led(brill_red, brill_green, brill_blue);
 
     while (true)
     {
@@ -129,7 +129,7 @@ void app_main(void)
                 }
                 ESP_LOGI("Main", "MAC: %X%X%X%X%X%X",
                          base_mac_addr[0], base_mac_addr[1], base_mac_addr[2], base_mac_addr[3], base_mac_addr[4], base_mac_addr[5]);
-                ESP_LOGI("Main", "LED brilliance for r(%d), g(%d) and b(%d) maximum: %d", r, g, b, brill);  // line added by @PaulskPt
+                ESP_LOGI("Main", "LED brilliance for r(%d), g(%d) and b(%d) maximum: %d", r, g, b, brill);
             }
         }
         vTaskDelay(10 / portTICK_RATE_MS);
