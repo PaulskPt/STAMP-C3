@@ -20,6 +20,12 @@
 #include <time.h>
 #include "esp_system.h"
 
+/*
+   Modifications by Paulus Schulinck (Github @PaulskPt)
+   to reduce the brilliance of the LED 
+   so that the LED light does not harm your eyes
+   Date modifications: 2022-07-15.
+*/
 #define STAMP_C3
 // #define STAMP_C3U
 
@@ -27,7 +33,8 @@
 led_strip_t *strip;
 
 #ifdef STAMP_C3
-uint8_t PINS[] = {4, 5, 6, 7, 8, 10, 1, 0, 21, 20, 9, 18, 19};
+// See: https://github.com/m5stack/STAMP-C3/issues/2
+uint8_t PINS[] = {4, 5, 6, 7, 8, 10, 1, 0, /*21,*/ 20, 9, 18, 19}; 
 #define BTN_PIN 3
 #endif
 
@@ -37,6 +44,12 @@ uint8_t PINS[] = {4, 5, 6, 7, 8, 10, 1, 0, 21, 20, 3, 18, 19};
 #endif
 
 #define RMT_TX_GPIO 2
+
+/* Added by @PaulskPt */
+uint8_t brill_red = 0;     // Initial brilliance
+uint8_t brill_green = 25;  // idem
+uint8_t brill_blue = 25;   // idem
+#define brill 30           // inside main loop: max value for brilliance
 
 void update_led(uint8_t r, uint8_t g, uint8_t b)
 {
@@ -94,7 +107,9 @@ void app_main(void)
     gpio_set_direction(BTN_PIN, GPIO_MODE_INPUT);
     gpio_set_pull_mode(BTN_PIN, GPIO_PULLUP_ONLY);
 
-    update_led(0, 255, 200);
+    //update_led(0, 255, 200);
+    ESP_LOGI("Main", "Initial LED brilliance set to: r(%d), g(%d) and b(%d)", brill_red, brill_green, brill_blue);  // line added by @PaulskPt
+    update_led(brill_red, brill_green, brill_blue);  // Line added by @PaulskPt. I want much less brilliance of the LED
 
     while (true)
     {
@@ -103,9 +118,9 @@ void app_main(void)
             vTaskDelay(5 / portTICK_RATE_MS);
             if (gpio_get_level(BTN_PIN) == 0)
             {
-                int r = rand() % 256;
-                int g = rand() % 256;
-                int b = rand() % 256;
+                int r = rand() % brill;  // was "% 256"
+                int g = rand() % brill;
+                int b = rand() % brill;
                 update_led(r, g, b);
                 io_reverse();
                 while (gpio_get_level(BTN_PIN) == 0)
@@ -114,6 +129,7 @@ void app_main(void)
                 }
                 ESP_LOGI("Main", "MAC: %X%X%X%X%X%X",
                          base_mac_addr[0], base_mac_addr[1], base_mac_addr[2], base_mac_addr[3], base_mac_addr[4], base_mac_addr[5]);
+                ESP_LOGI("Main", "LED brilliance for r(%d), g(%d) and b(%d) maximum: %d", r, g, b, brill);  // line added by @PaulskPt
             }
         }
         vTaskDelay(10 / portTICK_RATE_MS);
