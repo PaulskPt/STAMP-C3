@@ -129,7 +129,7 @@ void app_main(void)
                 }
                 ESP_LOGI("Main", "MAC: %X%X%X%X%X%X",
                          base_mac_addr[0], base_mac_addr[1], base_mac_addr[2], base_mac_addr[3], base_mac_addr[4], base_mac_addr[5]);
-                ESP_LOGI("Main", "LED brilliance for r(%d), g(%d) and b(%d) maximum: %d", r, g, b, brill);
+                ESP_LOGI("Main", "LED brilliance for r(%d), g(%d) and b(%d). Maximum: %d", r, g, b, brill);
             }
         }
         vTaskDelay(10 / portTICK_RATE_MS);
